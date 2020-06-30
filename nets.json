@@ -1,0 +1,17 @@
+[
+  {
+    "length": 16,
+    "maxlength": 17,
+    "prefix": "139.140.0.0"
+  },
+  {
+    "length": 36,
+    "maxlength": 48,
+    "prefix": "2602:fd40::"
+  },
+  {
+    "length": 44,
+    "maxlength": 48,
+    "prefix": "2602:0:2b70::"
+  }
+]
