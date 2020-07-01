@@ -1,15 +1,40 @@
 #!/bin/bash
 
+# generate signed RPKI route origin authorization(s)
+#
+# Perform the following tasks:
+# - generate a signing key (store and retrieve from 1Password)
+# - extract the public key (for one-time setup of ARIN hosted RPKI)
+# - generate ROA(s) for listed networks and provided ORIGIN ASNs
+# - sign and format ROAs for submission to ARIN's "Signed ROA Request"
+#
+# jlavoie@bowdoin.edu Tue Jun 30 17:08:33 EDT 2020
+
 set -e
 
+KEYPAIR="orgkeypair.pem"
+PUBKEY="org_pubkey.cer"
+NETS="nets.json"
 ORG_ID="BOWDOI-1"
 TIMESTAMP=$(date +%s)
 START=$(date +%m-%d-%Y)
 END=$(date -v+5y +%m-%d-%Y)
-ORIGIN_AS=(22847)
-KEYPAIR="orgkeypair.pem"
-PUBKEY="org_pubkey.cer"
-NETS="nets.json"
+
+while getopts "n:" arg; do
+  case "$arg" in
+    n)
+      name=$OPTARG
+      ;;
+    *)
+      echo "Usage: $0 [-n <ROA name>] [ASN]..."
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+
+# use BOWDOIN ASN if unspecified
+[ "$#" -eq 0 ] && set -- 22847
 
 # generate RPKI signing key
 if [ -s "$KEYPAIR" ]; then
@@ -33,6 +58,7 @@ else
   fi
 fi
 
+# extract public key
 if [ ! -s "$PUBKEY" ] ; then
   echo "Extracting public key $PUBKEY from keypair $KEYPAIR"
   openssl rsa -in "$KEYPAIR" -pubout -outform PEM -out "$PUBKEY"
@@ -41,14 +67,20 @@ if [ ! -s "$PUBKEY" ] ; then
 fi
 
 # generate and sign ROAs
-for as in "${ORIGIN_AS[@]}" ; do
+for asn; do
+  if ! [[ "$asn" -ge 0 && "$asn" -le 4294967295 ]]; then
+    echo
+    echo "Skipping invalid ASN $asn"
+    continue
+  fi
   roa=''
   for net in $(jq -c '.[]' "$NETS") ; do
     prefix=$(jq -r .prefix <<<"$net" | tr a-f A-F)
     length=$(jq -r .length <<<"$net")
-    maxlength=$(jq -r .maxlength <<<"$net")
+    maxlength=$(jq -r '.maxlength // .length' <<<"$net")
+    roaname="BOWDOIN${name:+-$name-$asn}"
     if [ -z "$roa" ] ; then
-      roa="1|$TIMESTAMP|BOWDOIN|$as|$START|$END|$prefix|$length|$maxlength|"
+      roa="1|$TIMESTAMP|$roaname|$asn|$START|$END|$prefix|$length|$maxlength|"
     else
       roa="$roa$prefix|$length|$maxlength|"
     fi
