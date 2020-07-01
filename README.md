@@ -1,9 +1,10 @@
 # RPKI
 
-Resource Public Key Infrastructure ([RPKI]), is a system where we
-publish authoritative, signed statements, Route Origin Authorizations
-([ROA]s) so that other network providers may perform route origin
-validation on any annoucements they receive for these prefixes.
+Resource Public Key Infrastructure ([RPKI]), is a system where
+we publish authoritative, signed statements, called Route Origin
+Authorizations ([ROA]s), so that other network providers may perform
+route origin validation on any annoucements they receive for these
+prefixes.
 
 We use the [Hosted RPKI] service provided by our RIR, [ARIN].
 
