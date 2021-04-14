@@ -124,7 +124,7 @@ Repeat the process for each signed ROA.
 
 [RPKI documentation][RPKI]
 
-[ARIN's Route Origina Authorization (ROA) documentation][ROA]
+[ARIN's Route Origin Authorization (ROA) documentation][ROA]
 
 [RPKI]: https://rpki.readthedocs.io/en/latest/index.html
 [ROA]: https://www.arin.net/resources/manage/rpki/roa_request/
