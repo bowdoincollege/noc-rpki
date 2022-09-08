@@ -3,7 +3,7 @@
 Resource Public Key Infrastructure ([RPKI]), is a system where
 we publish authoritative, signed statements, called Route Origin
 Authorizations ([ROA]s), so that other network providers may perform
-route origin validation on any annoucements they receive for these
+route origin validation on any announcements they receive for these
 prefixes.
 
 We use the [Hosted RPKI] service provided by our RIR, [ARIN].
@@ -32,8 +32,8 @@ ROA(s).
 Run the `genroa.sh` script to create the [RPKI] signing key, generate
 [ROA]s and sign them.  By default, the script will use the [our
 ASN](https://bgp.he.net/AS22847) and a ROA name of "BOWDOIN", but these
-can be modified on the commandline.  The script will first try to
-retrieve the organization keypair from 1Password.  If not available, it
+can be modified on the command line.  The script will first try to
+retrieve the organization key pair from 1Password.  If not available, it
 will generate a new one and upload to 1Password as a new document in the
 Networking vault.
 
@@ -109,7 +109,7 @@ the organization to add the ROAs.
 
 - Paste one of the signed ROAs from the `genroa.sh` output
   (including `-----BEGIN ROA REQUEST-----` through `-----END SIGNATURE-----`)
-  into the "Signed ROA Request:" textfield.
+  into the "Signed ROA Request:" text field.
 - Choose "Next Step"
 
 ![ARIN Submit ROA](images/ARIN-roa-submit.png)
